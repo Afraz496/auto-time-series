@@ -28,6 +28,22 @@ jobs:
       - name: Test
         run: uv run pytest --cov=autotimeseries --cov-report=term-missing
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --extra docs
+
+      - name: Build docs
+        run: uv run sphinx-build -b html docs docs/_build/html -W --keep-going
+
   test-torch:
     # Separate job: the torch extra is a large download, so it runs once on
     # a single Python version rather than in the main version matrix.

@@ -16,6 +16,14 @@ For local development:
 uv sync --extra dev
 ```
 
+Full docs with a worked example for every model live under [`docs/`](docs/index.md);
+build them locally with:
+
+```bash
+uv sync --extra docs
+uv run sphinx-build -b html docs docs/_build/html
+```
+
 `LSTMForecaster` requires PyTorch, kept out of the base install:
 
 ```bash

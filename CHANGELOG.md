@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Sphinx documentation site (`docs/`): installation, quickstart, evaluation guide, a worked example for every model, and full autodoc API reference. Built in CI.
+
 ## 0.1.0
 
 - Common fit/predict API and labelled forecast result objects.
