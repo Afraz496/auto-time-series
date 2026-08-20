@@ -1,8 +1,12 @@
-# ForecastResult
+# Results
 
 ```{eval-rst}
 .. autoclass:: autotimeseries.ForecastResult
    :members:
-   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: autotimeseries.BacktestResult
+   :members:
    :show-inheritance:
 ```
+
