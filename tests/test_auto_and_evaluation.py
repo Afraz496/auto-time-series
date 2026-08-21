@@ -12,7 +12,7 @@ from autotimeseries import (
 
 def test_backtest_has_temporal_folds():
     result = backtest(NaiveForecaster(), pd.Series(np.arange(20.0)), horizon=2, initial=12)
-    assert list(result.columns) == ["cutoff", "score", "n_train"]
+    assert list(result.scores.columns) == ["cutoff", "score", "n_train"]
     assert len(result) == 7
 
 
