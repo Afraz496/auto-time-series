@@ -21,6 +21,7 @@ class ForecastResult:
     lower: dict[float, pd.Series]
     upper: dict[float, pd.Series]
     model_name: str
+    observed: pd.Series | None = None
 
     def to_frame(self) -> pd.DataFrame:
         """Return point forecasts and all intervals as a DataFrame."""
@@ -38,11 +39,14 @@ class ForecastResult:
         return pd.DataFrame({"lower": self.lower[level], "upper": self.upper[level]})
 
     def plot(self, observed: pd.Series | None = None, title: str | None = None, **kwargs: Any) -> Axes:
-        """Plot the forecast trajectory over history. See ``plot_forecast_trajectories``."""
+        """Plot the forecast trajectory with its prediction bands over the observed history."""
         from .plotting import plot_forecast_trajectories
 
         return plot_forecast_trajectories(
-            observed, self, title=title or f"{self.model_name} Forecast", **kwargs
+            self,
+            observed=self.observed if observed is None else observed,
+            title=title or f"{self.model_name} Forecast",
+            **kwargs,
         )
 
 
@@ -61,12 +65,15 @@ class BacktestResult:
         Name of the evaluated model.
     metric : str
         Metric used for scoring (e.g. 'rmse').
+    observed : pd.Series, optional
+        The series that was backtested; ``.plot()`` falls back to it.
     """
 
     scores: pd.DataFrame
     predictions: pd.DataFrame
     model_name: str
     metric: str
+    observed: pd.Series | None = None
 
     def __getitem__(self, key: Any) -> Any:
         return self.scores[key]
@@ -83,7 +90,9 @@ class BacktestResult:
         from .plotting import plot_backtest
 
         return plot_backtest(
-            self, observed=observed,
-            title=title or f"Backtest Predictions ({self.model_name})", **kwargs
+            self,
+            observed=self.observed if observed is None else observed,
+            title=title or f"Backtest Predictions ({self.model_name})",
+            **kwargs,
         )
 
