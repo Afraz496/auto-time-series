@@ -6,14 +6,11 @@ import matplotlib.axes
 import numpy as np
 import pandas as pd
 
+from autotimeseries.auto import AutoForecaster
 from autotimeseries.evaluation import backtest
-from autotimeseries.models import NaiveForecaster
-from autotimeseries.plotting import (
-    plot_backtest,
-    plot_forecast_trajectories,
-    plot_metric_by_horizon,
-)
-from autotimeseries.result import BacktestResult, ForecastResult
+from autotimeseries.models import DriftForecaster, MeanForecaster, NaiveForecaster
+from autotimeseries.plotting import plot_backtest, plot_metric_by_horizon
+from autotimeseries.result import BacktestResult
 
 
 def test_plot_metric_by_horizon(tmp_path):
@@ -34,24 +31,21 @@ def test_plot_metric_by_horizon(tmp_path):
     assert save_file.stat().st_size > 0
 
 
-def test_plot_forecast_trajectories(tmp_path):
-    idx = pd.period_range("2025-01", periods=12, freq="M")
-    observed = pd.Series(np.arange(12), index=idx, name="value")
-    idx_fc = pd.period_range("2025-10", periods=3, freq="M")
-    forecast = ForecastResult(
-        mean=pd.Series([9.5, 10.5, 11.5], index=idx_fc),
-        lower={80: pd.Series([8.0, 9.0, 10.0], index=idx_fc)},
-        upper={80: pd.Series([11.0, 12.0, 13.0], index=idx_fc)},
-        model_name="TestModel",
-    )
+def test_forecast_result_infers_observed(tmp_path):
+    y = pd.Series(np.arange(24.0), index=pd.period_range("2024-01", periods=24, freq="M"))
+    fc = NaiveForecaster().fit(y).predict(horizon=4, level=[80, 95])
 
-    save_file = tmp_path / "plot_trajectory.png"
-    ax = plot_forecast_trajectories(observed, forecast, title="Traj", save_path=str(save_file))
-    assert isinstance(ax, matplotlib.axes.Axes)
+    assert fc.observed is not None and fc.observed.equals(y)  # forecaster stashes the series
+    save_file = tmp_path / "traj.png"
+    ax = fc.plot(save_path=str(save_file))  # no observed= argument
+    labels = [t.get_text() for t in ax.get_legend().get_texts()]
+    assert any("Observed" in t for t in labels)
+    assert labels.index("80% interval") < labels.index("95% interval")  # nested, narrow first
     assert save_file.stat().st_size > 0
 
-    method_ax = forecast.plot(observed=observed, title="Method Traj")
-    assert method_ax.get_title() == "Method Traj"
+    bt = backtest(NaiveForecaster(), y, horizon=2, initial=18)
+    assert bt.observed is not None and bt.observed.equals(y)
+    assert any("Observed" in t.get_text() for t in bt.plot().get_legend().get_texts())
 
 
 def test_plot_backtest_predictions(tmp_path):
@@ -73,3 +67,16 @@ def test_plot_backtest_predictions(tmp_path):
 
     method_ax = bt.plot(observed=y)
     assert method_ax.get_title() == "Backtest Predictions (NaiveForecaster)"
+
+
+def test_auto_forecaster_plot_all():
+    y = pd.Series(np.arange(24.0), index=pd.period_range("2024-01", periods=24, freq="M"))
+    auto = AutoForecaster(
+        models=[NaiveForecaster(), MeanForecaster(), DriftForecaster()],
+        validation_horizon=3,
+    ).fit(y)
+
+    ax = auto.plot_all(horizon=6)
+    labels = [t.get_text() for t in ax.get_legend().get_texts()]
+    assert "DriftForecaster forecast" in labels
+    assert "MeanForecaster forecast" in labels
