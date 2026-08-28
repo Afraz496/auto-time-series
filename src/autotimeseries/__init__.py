@@ -2,7 +2,7 @@
 
 from .auto import AutoForecaster
 from .base import BaseForecaster
-from .evaluation import backtest
+from .evaluation import Backtester, backtest
 from .metrics import mae, mape, rmse, smape
 from .models import (
     ARIMAForecaster,
@@ -15,7 +15,7 @@ from .models import (
     SeasonalNaiveForecaster,
     ThetaForecaster,
 )
-from .plotting import plot_backtest, plot_forecast_trajectories, plot_metric_by_horizon
+from .plotting import plot_backtest, plot_metric_by_horizon
 from .result import BacktestResult, ForecastResult
 
 __version__ = "0.1.0"
@@ -24,6 +24,7 @@ __all__ = [
     "AutoARIMAForecaster",
     "AutoForecaster",
     "BacktestResult",
+    "Backtester",
     "BaseForecaster",
     "DriftForecaster",
     "ETSForecaster",
@@ -37,7 +38,6 @@ __all__ = [
     "mae",
     "mape",
     "plot_backtest",
-    "plot_forecast_trajectories",
     "plot_metric_by_horizon",
     "rmse",
     "smape",
