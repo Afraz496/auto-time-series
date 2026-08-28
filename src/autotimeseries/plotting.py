@@ -253,7 +253,9 @@ def plot_backtest(
         table directly: columns ``cutoff``, ``target_date``, ``predicted``, and
         optional ``lower_*`` / ``upper_*``.
     observed : pd.Series, optional
-        Historical observations.
+        History to draw the predictions against. Defaults to ``result.observed``
+        (a ``BacktestResult`` always carries it), then to the ``actual`` column
+        of the predictions.
     title : str, default "Backtest Out-of-Sample Predictions"
     show_intervals : bool, default True
         Draw the per-fold interval band when interval columns are present.
@@ -273,6 +275,17 @@ def plot_backtest(
     preds = preds.copy()
     preds["cutoff"] = _to_timestamp_safe(preds["cutoff"])
     preds["target_date"] = _to_timestamp_safe(preds["target_date"])
+
+    if observed is None:
+        observed = getattr(result, "observed", None)
+    if observed is None and "actual" in preds.columns:  # realized values per target date
+        actuals = (
+            preds.dropna(subset=["actual"])
+            .drop_duplicates("target_date")
+            .set_index("target_date")["actual"]
+            .sort_index()
+        )
+        observed = actuals if len(actuals) else None
 
     if ax is None:
         _, ax = plt.subplots(figsize=figsize)

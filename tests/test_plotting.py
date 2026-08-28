@@ -68,6 +68,13 @@ def test_plot_backtest_predictions(tmp_path):
     method_ax = bt.plot(observed=y)
     assert method_ax.get_title() == "Backtest Predictions (NaiveForecaster)"
 
+    # observed omitted: falls back to result.observed, then to predictions['actual']
+    def has_observed_line(a):
+        return any("Observed" in t.get_text() for t in a.get_legend().get_texts())
+
+    assert has_observed_line(plot_backtest(bt))
+    assert has_observed_line(plot_backtest(bt.predictions))  # raw DataFrame, no .observed
+
 
 def test_auto_forecaster_plot_all():
     y = pd.Series(np.arange(24.0), index=pd.period_range("2024-01", periods=24, freq="M"))
