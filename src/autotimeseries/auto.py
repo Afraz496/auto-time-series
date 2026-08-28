@@ -97,12 +97,27 @@ class AutoForecaster(BaseForecaster):
         self.forecast_, self.prediction_intervals_ = result, self.best_model_.prediction_intervals_
         return result
 
-    def plot_all(self, horizon=None, level=(80, 95), observed=None, **kwargs):
+    def plot_all(
+        self, horizon=None, level=(80, 95), observed=None, intervals=False, **kwargs
+    ):
         """Overlay every successful candidate's forecast on one axes.
 
         Refits each candidate on the full training series, unless the estimator
         was built with ``keep_all=True`` (then the stored fits are reused).
-        Extra kwargs (`title`, `intervals`, `ax`, `save_path`, ...) tune the plot.
+
+        Parameters
+        ----------
+        horizon : int, optional
+            Steps to forecast. Defaults to ``validation_horizon``.
+        level : float or sequence of float, default (80, 95)
+            Prediction-interval coverage levels to compute.
+        observed : pd.Series, optional
+            History to draw. Defaults to the full training series.
+        intervals : bool, default False
+            Shade each candidate's prediction bands. Off by default -- with
+            several candidates the overlapping bands get muddy.
+        **kwargs
+            Forwarded to the trajectory plot (`title`, `ax`, `save_path`, ...).
         """
         from .plotting import plot_forecast_trajectories
 
@@ -115,9 +130,11 @@ class AutoForecaster(BaseForecaster):
                 type(m).__name__: deepcopy(m).fit(self.y_).predict(horizon, level=level)
                 for m in self.candidates_
             }
-        kwargs.setdefault("intervals", False)
         return plot_forecast_trajectories(
-            forecasts, observed=self.y_ if observed is None else observed, **kwargs
+            forecasts,
+            observed=self.y_ if observed is None else observed,
+            intervals=intervals,
+            **kwargs,
         )
 
     def _fit(self, y):

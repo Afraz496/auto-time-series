@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
     from .result import BacktestResult, ForecastResult
 
-__all__ = ["plot_backtest", "plot_forecast_trajectories", "plot_metric_by_horizon"]
+__all__ = ["plot_backtest", "plot_metric_by_horizon"]
 
 
 def _to_timestamp_safe(s: pd.Series | pd.Index) -> pd.Series | pd.Index:
@@ -27,6 +27,21 @@ def _to_timestamp_safe(s: pd.Series | pd.Index) -> pd.Series | pd.Index:
     if len(s) and hasattr(s.iloc[0], "to_timestamp"):
         return pd.Series([x.to_timestamp() for x in s], index=s.index)
     return pd.to_datetime(s)
+
+
+def _anchor_before(observed: pd.Series | None, first_ts) -> tuple | None:
+    """Last observed (timestamp, value) strictly before ``first_ts``.
+
+    Joins a forecast line to the point it was made from, even when ``observed``
+    runs past the forecast start (train/test overlay).
+    """
+    if observed is None or not len(observed):
+        return None
+    ts = _to_timestamp_safe(observed.index)
+    mask = ts < first_ts
+    if not mask.any():
+        return None
+    return ts[mask][-1], float(observed.to_numpy()[mask][-1])
 
 
 def _plot_observed(ax: Axes, observed: pd.Series | None) -> str:
@@ -129,22 +144,29 @@ def plot_metric_by_horizon(
 
 
 def plot_forecast_trajectories(
-    observed: pd.Series | None,
-    forecast: ForecastResult,
+    forecasts: ForecastResult | dict[str, ForecastResult],
+    observed: pd.Series | None = None,
     title: str = "Forecast Trajectory",
+    intervals: bool = True,
     figsize: tuple[float, float] = (10, 5),
     ax: Axes | None = None,
     save_path: str | None = None,
 ) -> Axes:
-    """Plot a forecast trajectory with its tightest prediction interval.
+    """Plot one or several forecast trajectories over the observed history.
+
+    Shared implementation behind ``ForecastResult.plot()`` and
+    ``AutoForecaster.plot_all()`` -- not part of the public API; call those.
 
     Parameters
     ----------
+    forecasts : ForecastResult or dict[str, ForecastResult]
+        A single forecast, or ``{label: forecast}`` to overlay several on one axes.
     observed : pd.Series, optional
         Historical observations, indexed by period or timestamp.
-    forecast : ForecastResult
-        The forecast to draw.
     title : str, default "Forecast Trajectory"
+    intervals : bool, default True
+        Shade every prediction interval each forecast carries (nested). Turn off
+        for a cleaner multi-model comparison.
     figsize : tuple, default (10, 5)
     ax : matplotlib Axes, optional
     save_path : str, optional
@@ -153,26 +175,55 @@ def plot_forecast_trajectories(
     -------
     matplotlib.axes.Axes
     """
+    if not isinstance(forecasts, dict):
+        forecasts = {forecasts.model_name: forecasts}
+
     if ax is None:
         _, ax = plt.subplots(figsize=figsize)
     sns.set_theme(style="whitegrid")
 
     ylabel = _plot_observed(ax, observed)
+    palette = sns.color_palette(n_colors=len(forecasts))
 
-    df = forecast.to_frame()
-    x = _to_timestamp_safe(df.index)
-    ax.axvline(x[0], color="grey", linestyle="--", alpha=0.5)
+    single = len(forecasts) == 1
+    for (name, fc), color in zip(forecasts.items(), palette):
+        df = fc.to_frame()
+        x = _to_timestamp_safe(df.index)
+        anchor = _anchor_before(observed, x[0])  # join to the last obs before the forecast
+        connect = anchor is not None
+        xc = x.insert(0, anchor[0]) if connect else x
 
-    level = min(forecast.lower)
-    ax.fill_between(
-        x,
-        df[f"lower_{level:g}"],
-        df[f"upper_{level:g}"],
-        color="#d95f02",
-        alpha=0.2,
-        label=f"{level:g}% interval",
-    )
-    sns.lineplot(x=x, y=df["mean"].to_numpy(), color="#d95f02", linewidth=2.0, label="Forecast", ax=ax)
+        mean_y = df["mean"].to_numpy()
+        if connect:
+            mean_y = [anchor[1], *mean_y]
+        # line first so the legend reads: forecast, then intervals narrow -> wide
+        sns.lineplot(
+            x=xc,
+            y=mean_y,
+            color=color,
+            linewidth=2.0,
+            marker="o",
+            markersize=4,
+            label=f"{name} forecast",
+            ax=ax,
+            zorder=3,
+        )
+        if intervals:
+            for lvl in sorted(fc.lower):
+                lo = df[f"lower_{lvl:g}"].to_numpy()
+                hi = df[f"upper_{lvl:g}"].to_numpy()
+                if connect:
+                    lo = [anchor[1], *lo]
+                    hi = [anchor[1], *hi]
+                ax.fill_between(
+                    xc,
+                    lo,
+                    hi,
+                    color=color,
+                    alpha=0.15,
+                    zorder=-lvl,  # wider band sits behind the narrower one
+                    label=f"{lvl:g}% interval" if single else None,
+                )
 
     ax.set_xlabel("Date", fontsize=11)
     ax.set_ylabel(ylabel, fontsize=11)
@@ -228,25 +279,43 @@ def plot_backtest(
     sns.set_theme(style="whitegrid")
 
     ylabel = _plot_observed(ax, observed)
+    obs_ts = None
+    if observed is not None and len(observed):
+        obs_ts = pd.Series(
+            observed.to_numpy(), index=_to_timestamp_safe(observed.index)
+        ).sort_index()
 
     lower_col = next((c for c in preds.columns if c.startswith("lower")), None)
     upper_col = next((c for c in preds.columns if c.startswith("upper")), None)
     for i, cutoff in enumerate(sorted(preds["cutoff"].unique())):
         sub = preds[preds["cutoff"] == cutoff].sort_values("target_date")
-        ax.axvline(cutoff, color="grey", linestyle=":", alpha=0.45)
-        if show_intervals and lower_col and upper_col:
+        td = list(sub["target_date"])
+        pred = list(sub["predicted"])
+        band = show_intervals and lower_col and upper_col
+        lo = list(sub[lower_col]) if band else None
+        hi = list(sub[upper_col]) if band else None
+
+        if obs_ts is not None:  # join each fold to the observation at its cutoff
+            av = obs_ts.asof(pd.Timestamp(cutoff))
+            if pd.notna(av):
+                td = [pd.Timestamp(cutoff), *td]
+                pred = [av, *pred]
+                if band:
+                    lo = [av, *lo]
+                    hi = [av, *hi]
+
+        if band:
             ax.fill_between(
-                sub["target_date"],
-                sub[lower_col],
-                sub[upper_col],
+                td,
+                lo,
+                hi,
                 color="#1f77b4",
                 alpha=0.15,
                 label="Prediction interval" if i == 0 else None,
             )
         sns.lineplot(
-            data=sub,
-            x="target_date",
-            y="predicted",
+            x=td,
+            y=pred,
             color="#1f77b4",
             linewidth=1.8,
             marker="o",
