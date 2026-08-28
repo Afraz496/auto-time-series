@@ -56,7 +56,7 @@ class BaseForecaster(ABC):
             z = norm.ppf(0.5 + coverage / 200)
             lower[coverage] = pd.Series(mean_series.to_numpy() - z * se, index=index)
             upper[coverage] = pd.Series(mean_series.to_numpy() + z * se, index=index)
-        result = ForecastResult(mean_series, lower, upper, type(self).__name__)
+        result = ForecastResult(mean_series, lower, upper, type(self).__name__, self.y_)
         self.forecast_ = result
         self.prediction_intervals_ = {coverage: result.interval(coverage) for coverage in levels}
         return result

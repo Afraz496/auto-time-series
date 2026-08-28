@@ -79,6 +79,7 @@ class Backtester:
             predictions=pd.concat(folds, ignore_index=True),
             model_name=model_name,
             metric=self.metric,
+            observed=series,
         )
 
 
