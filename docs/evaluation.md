@@ -2,13 +2,13 @@
 
 ## Backtesting
 
-{func}`~autotimeseries.backtest` scores a forecaster on expanding-window,
+{func}`~omnicast.backtest` scores a forecaster on expanding-window,
 rolling-origin splits: it fits on `y[:end]`, forecasts `horizon` steps, scores
 against the true values, then slides `end` forward by `step` and repeats.
 It never trains on future observations.
 
 ```python
-from autotimeseries import NaiveForecaster, backtest
+from omnicast import NaiveForecaster, backtest
 
 folds = backtest(
     NaiveForecaster(),
@@ -33,7 +33,7 @@ summary number.
 `ValueError` if `initial` and `horizon` leave no room for a single validation
 fold, and `ValueError` for an unknown `metric` name.
 
-This is exactly the mechanism {class}`~autotimeseries.AutoForecaster` uses
+This is exactly the mechanism {class}`~omnicast.AutoForecaster` uses
 internally to rank candidates -- see {doc}`examples/auto_forecaster`.
 
 ## Metrics
@@ -43,7 +43,7 @@ Full signatures are in the {doc}`api/metrics` reference. Each metric takes
 returns a single float:
 
 ```python
-from autotimeseries import mae, rmse, mape, smape
+from omnicast import mae, rmse, mape, smape
 
 actual = [100, 110, 90]
 predicted = [98, 115, 95]

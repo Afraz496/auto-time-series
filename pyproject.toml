@@ -3,13 +3,13 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "auto-time-series"
-version = "0.2.0"
-description = "Automatic statistical forecasting with a consistent Python API"
+name = "omnicast"
+version = "0.1.0"
+description = "The definitive automatic forecasting library for Python -- one consistent, interval-aware API over every model"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
-authors = [{name = "Auto Time Series contributors"}]
+authors = [{name = "Omnicast contributors"}]
 keywords = ["forecasting", "time-series", "arima", "ets"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -40,10 +40,10 @@ docs = [
 ]
 
 [project.urls]
-Repository = "https://github.com/Afraz496/auto-time-series"
+Repository = "https://github.com/Afraz496/omnicast"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/autotimeseries"]
+packages = ["src/omnicast"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

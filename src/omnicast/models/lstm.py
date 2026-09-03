@@ -39,7 +39,7 @@ class LSTMForecaster(BaseForecaster):
 
     Not an R port -- this wraps a major Python deep-learning module the same
     way `ETSForecaster`/`ARIMAForecaster` wrap `statsmodels`. Requires the
-    optional `torch` extra (`pip install auto-time-series[torch]`); raises a
+    optional `torch` extra (`pip install omnicast[torch]`); raises a
     clear `ImportError` naming the missing package if `torch` is absent, and
     the module still imports cleanly without it.
 
@@ -68,7 +68,7 @@ class LSTMForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import LSTMForecaster
+    >>> from omnicast import LSTMForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0, 16.0, 15.0])
     >>> model = LSTMForecaster(lookback=2, hidden_size=4, epochs=30, seed=0).fit(y)
     >>> forecast = model.predict(horizon=2)  # values vary slightly by platform
@@ -85,7 +85,7 @@ class LSTMForecaster(BaseForecaster):
        * - Avoid when
          - You need a fast default, exact reproducibility across
            machines, or don't want the optional ``torch`` dependency --
-           never included in :class:`~autotimeseries.AutoForecaster`'s
+           never included in :class:`~omnicast.AutoForecaster`'s
            default candidates for these reasons
        * - Handles trend
          - Implicitly, via the sliding-window autoregression
@@ -93,7 +93,7 @@ class LSTMForecaster(BaseForecaster):
          - Only if ``lookback`` spans a full cycle; no explicit seasonal
            component
        * - Extra dependencies
-         - ``torch`` (``pip install auto-time-series[torch]``)
+         - ``torch`` (``pip install omnicast[torch]``)
        * - Min. observations
          - ``lookback + 2``
     """
@@ -120,7 +120,7 @@ class LSTMForecaster(BaseForecaster):
         if torch is None:
             raise ImportError(
                 "LSTMForecaster requires the optional 'torch' dependency; "
-                "install with `pip install auto-time-series[torch]`."
+                "install with `pip install omnicast[torch]`."
             )
         n = len(y)
         if n < self.lookback + 2:

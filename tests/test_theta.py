@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from autotimeseries import ThetaForecaster
+from omnicast import ThetaForecaster
 
 
 def trending_series(n=24):

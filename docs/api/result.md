@@ -1,11 +1,11 @@
 # Results
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.ForecastResult
+.. autoclass:: omnicast.ForecastResult
    :members:
    :show-inheritance:
 
-.. autoclass:: autotimeseries.BacktestResult
+.. autoclass:: omnicast.BacktestResult
    :members:
    :show-inheritance:
 ```

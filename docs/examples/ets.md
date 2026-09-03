@@ -1,7 +1,7 @@
 # ETSForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.ETSForecaster
+.. autoclass:: omnicast.ETSForecaster
    :no-index:
 ```
 
@@ -12,7 +12,7 @@ seasonal structure rather than having it searched for you (see
 {doc}`auto_arima` / {doc}`auto_forecaster` for automatic selection).
 
 ```python
-from autotimeseries import ETSForecaster
+from omnicast import ETSForecaster
 
 model = ETSForecaster(
     trend="add",

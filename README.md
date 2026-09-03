@@ -1,13 +1,13 @@
-# Auto Time Series
+# Omnicast
 
-Automatic statistical forecasting for Python with one consistent, interval-aware API.
+Automatic statistical forecasting for Python with one consistent, interval-aware API -- fit, backtest, and plot every model the same way.
 
-> **Status:** v0.1 alpha. The API is usable, but model coverage and R parity fixtures are still growing.
+> **Status:** v0.1 alpha (renamed from `auto-time-series`). The API is usable, but model coverage and R parity fixtures are still growing.
 
 ## Install
 
 ```bash
-pip install auto-time-series
+pip install omnicast
 ```
 
 For local development:
@@ -27,7 +27,7 @@ uv run sphinx-build -b html docs docs/_build/html
 `LSTMForecaster` requires PyTorch, kept out of the base install:
 
 ```bash
-pip install auto-time-series[torch]
+pip install omnicast[torch]
 # or, for development:
 uv sync --extra dev --extra torch
 ```
@@ -36,7 +36,7 @@ uv sync --extra dev --extra torch
 
 ```python
 import pandas as pd
-from autotimeseries import AutoForecaster
+from omnicast import AutoForecaster
 
 y = pd.Series(
     [112, 118, 121, 130, 128, 137, 143, 149, 154, 162, 169, 175],
@@ -74,7 +74,7 @@ Every fitted estimator exposes `fitted_values_`, `residuals_`, `sigma2_`, and `p
 ## Evaluation
 
 ```python
-from autotimeseries import NaiveForecaster, backtest
+from omnicast import NaiveForecaster, backtest
 
 folds = backtest(NaiveForecaster(), y, horizon=3, initial=6, metric="rmse")
 print(folds)

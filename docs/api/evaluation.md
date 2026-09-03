@@ -1,9 +1,9 @@
 # Evaluation
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.Backtester
+.. autoclass:: omnicast.Backtester
    :members:
    :show-inheritance:
 
-.. autofunction:: autotimeseries.backtest
+.. autofunction:: omnicast.backtest
 ```

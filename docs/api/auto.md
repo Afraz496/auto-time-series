@@ -1,7 +1,7 @@
 # AutoForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.AutoForecaster
+.. autoclass:: omnicast.AutoForecaster
    :members:
    :undoc-members:
    :show-inheritance:

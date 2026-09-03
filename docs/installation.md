@@ -1,14 +1,14 @@
 # Installation
 
 ```bash
-pip install auto-time-series
+pip install omnicast
 ```
 
 `LSTMForecaster` depends on PyTorch, which is kept out of the base install because
 it is a large, optional dependency:
 
 ```bash
-pip install auto-time-series[torch]
+pip install omnicast[torch]
 ```
 
 ## Local development

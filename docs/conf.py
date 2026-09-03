@@ -1,4 +1,4 @@
-"""Sphinx configuration for auto-time-series."""
+"""Sphinx configuration for omnicast."""
 
 from __future__ import annotations
 
@@ -7,11 +7,11 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-project = "auto-time-series"
-copyright = "2026, Auto Time Series contributors"
-author = "Auto Time Series contributors"
+project = "Omnicast"
+copyright = "2026, Omnicast contributors"
+author = "Omnicast contributors"
 
-from autotimeseries import __version__ as release
+from omnicast import __version__ as release
 
 version = release
 
@@ -51,4 +51,4 @@ intersphinx_mapping = {
 
 html_theme = "furo"
 html_static_path = ["_static"]
-html_title = "auto-time-series"
+html_title = "Omnicast"

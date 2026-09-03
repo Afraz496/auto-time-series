@@ -3,22 +3,22 @@
 ## Baselines
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.NaiveForecaster
+.. autoclass:: omnicast.NaiveForecaster
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: autotimeseries.SeasonalNaiveForecaster
+.. autoclass:: omnicast.SeasonalNaiveForecaster
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: autotimeseries.MeanForecaster
+.. autoclass:: omnicast.MeanForecaster
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: autotimeseries.DriftForecaster
+.. autoclass:: omnicast.DriftForecaster
    :members:
    :undoc-members:
    :show-inheritance:
@@ -27,7 +27,7 @@
 ## Theta
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.ThetaForecaster
+.. autoclass:: omnicast.ThetaForecaster
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,17 +36,17 @@
 ## Statistical (statsmodels-backed)
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.ETSForecaster
+.. autoclass:: omnicast.ETSForecaster
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: autotimeseries.ARIMAForecaster
+.. autoclass:: omnicast.ARIMAForecaster
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: autotimeseries.AutoARIMAForecaster
+.. autoclass:: omnicast.AutoARIMAForecaster
    :members:
    :undoc-members:
    :show-inheritance:
@@ -55,7 +55,7 @@
 ## Neural (optional, torch)
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.LSTMForecaster
+.. autoclass:: omnicast.LSTMForecaster
    :members:
    :undoc-members:
    :show-inheritance:

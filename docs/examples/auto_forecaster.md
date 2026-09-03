@@ -1,18 +1,18 @@
 # AutoForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.AutoForecaster
+.. autoclass:: omnicast.AutoForecaster
    :no-index:
 ```
 
 Fits a panel of candidate models, scores each with rolling-origin
-backtesting ({func}`~autotimeseries.backtest`), and refits the winner on the
+backtesting ({func}`~omnicast.backtest`), and refits the winner on the
 full series. This is the model to reach for by default -- everything else in
 this guide is either a candidate it already tries or a tool for building
 your own candidate list.
 
 ```python
-from autotimeseries import AutoForecaster
+from omnicast import AutoForecaster
 
 model = AutoForecaster(
     seasonal_period=12,
@@ -66,7 +66,7 @@ series has more than one full cycle. `LSTMForecaster` is never a default
 candidate (see {doc}`lstm`); include it explicitly:
 
 ```python
-from autotimeseries import LSTMForecaster, ThetaForecaster, AutoForecaster
+from omnicast import LSTMForecaster, ThetaForecaster, AutoForecaster
 
 model = AutoForecaster(
     models=[LSTMForecaster(seed=0), ThetaForecaster(seasonal_period=12)],

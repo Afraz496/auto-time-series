@@ -4,7 +4,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from autotimeseries import LSTMForecaster
+from omnicast import LSTMForecaster
 
 
 def trending_series(n=30):

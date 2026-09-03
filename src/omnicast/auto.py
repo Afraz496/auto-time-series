@@ -29,7 +29,7 @@ class AutoForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import AutoForecaster
+    >>> from omnicast import AutoForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = AutoForecaster().fit(y)
     >>> model.leaderboard_["model"].iloc[0]
@@ -55,7 +55,7 @@ class AutoForecaster(BaseForecaster):
        * - Handles seasonality
          - Yes, via ``seasonal_period`` (adds seasonal-aware candidates)
        * - Extra dependencies
-         - None by default; include :class:`~autotimeseries.LSTMForecaster`
+         - None by default; include :class:`~omnicast.LSTMForecaster`
            explicitly via ``models=[...]`` to pull in ``torch``
        * - Min. observations
          - Whatever the strictest candidate in ``models`` requires; a

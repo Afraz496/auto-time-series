@@ -1,7 +1,7 @@
 # AutoARIMAForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.AutoARIMAForecaster
+.. autoclass:: omnicast.AutoARIMAForecaster
    :no-index:
 ```
 
@@ -12,7 +12,7 @@ reliable than raw AIC on short series). Failed fits (non-convergent,
 singular) are silently skipped rather than aborting the search.
 
 ```python
-from autotimeseries import AutoARIMAForecaster
+from omnicast import AutoARIMAForecaster
 
 model = AutoARIMAForecaster(
     seasonal_period=12,
@@ -55,7 +55,7 @@ print(forecast.to_frame())
 2026-06  223.05    221.12    224.98    220.10    226.00
 ```
 
-`AutoARIMAForecaster` subclasses {class}`~autotimeseries.ARIMAForecaster`, so
+`AutoARIMAForecaster` subclasses {class}`~omnicast.ARIMAForecaster`, so
 after `fit` it exposes the same `params_`, `aic_`, `bic_`, and prediction
 API -- plus `order_`/`seasonal_order_` (the winning search result) and
 `search_results_` (every candidate tried).

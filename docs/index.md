@@ -1,4 +1,4 @@
-# auto-time-series
+# Omnicast
 
 Automatic statistical forecasting for Python with one consistent, interval-aware API.
 
@@ -17,7 +17,7 @@ forecast = model.predict(horizon=6, level=[80, 95])
 
 `y` is a `pandas.Series` (or anything coercible to one) indexed by a `PeriodIndex`,
 a `DatetimeIndex` with a regular frequency, a `RangeIndex`, or a plain numeric index.
-`forecast` is a {class}`~autotimeseries.ForecastResult` carrying the point forecast
+`forecast` is a {class}`~omnicast.ForecastResult` carrying the point forecast
 and every requested prediction interval.
 
 ## Contents

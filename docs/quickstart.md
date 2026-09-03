@@ -2,7 +2,7 @@
 
 ```python
 import pandas as pd
-from autotimeseries import AutoForecaster
+from omnicast import AutoForecaster
 
 y = pd.Series(
     [112, 118, 121, 130, 128, 137, 143, 149, 154, 162, 169, 175],
@@ -34,7 +34,7 @@ attributes:
   estimators only (`ETSForecaster`, `ARIMAForecaster`, `AutoARIMAForecaster`).
 
 **Prediction.** `model.predict(horizon, level=[80, 95])` returns a
-{class}`~autotimeseries.ForecastResult`: a `mean` series plus a lower/upper
+{class}`~omnicast.ForecastResult`: a `mean` series plus a lower/upper
 series per requested coverage level. `level` accepts a single number or an
 iterable; intervals are computed fresh on every call because they depend on
 horizon and coverage.
@@ -45,9 +45,9 @@ forecast.interval(95)    # DataFrame with lower/upper columns for one level
 forecast.to_frame()      # mean + every requested interval, one DataFrame
 ```
 
-**Model selection.** {class}`~autotimeseries.AutoForecaster` fits a panel of
+**Model selection.** {class}`~omnicast.AutoForecaster` fits a panel of
 candidates, scores each with rolling-origin backtesting
-({func}`~autotimeseries.backtest`), and refits the winner on the full series.
+({func}`~omnicast.backtest`), and refits the winner on the full series.
 Inspect `model.leaderboard_` to see every candidate's score (candidates that
 raised an exception show `score = inf` and the error message, rather than
 aborting selection).

@@ -18,7 +18,7 @@ class ETSForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import ETSForecaster
+    >>> from omnicast import ETSForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = ETSForecaster(trend="add").fit(y)
     >>> model.predict(horizon=2).mean.round(2).tolist()
@@ -96,7 +96,7 @@ class ARIMAForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import ARIMAForecaster
+    >>> from omnicast import ARIMAForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = ARIMAForecaster(order=(1, 0, 0)).fit(y)
     >>> model.predict(horizon=2).mean.round(2).tolist()
@@ -187,7 +187,7 @@ class AutoARIMAForecaster(ARIMAForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import AutoARIMAForecaster
+    >>> from omnicast import AutoARIMAForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = AutoARIMAForecaster(max_p=1, max_d=1, max_q=0).fit(y)
     >>> model.order_
@@ -205,7 +205,7 @@ class AutoARIMAForecaster(ARIMAForecaster):
 
        * - Best for
          - You want ARIMA/SARIMA without hand-picking an order; the
-           default first candidate :class:`~autotimeseries.AutoForecaster`
+           default first candidate :class:`~omnicast.AutoForecaster`
            tries
        * - Avoid when
          - Interactive use with a wide search space -- cost scales as the

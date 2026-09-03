@@ -6,11 +6,11 @@ import matplotlib.axes
 import numpy as np
 import pandas as pd
 
-from autotimeseries.auto import AutoForecaster
-from autotimeseries.evaluation import backtest
-from autotimeseries.models import DriftForecaster, MeanForecaster, NaiveForecaster
-from autotimeseries.plotting import plot_backtest, plot_metric_by_horizon
-from autotimeseries.result import BacktestResult
+from omnicast.auto import AutoForecaster
+from omnicast.evaluation import backtest
+from omnicast.models import DriftForecaster, MeanForecaster, NaiveForecaster
+from omnicast.plotting import plot_backtest, plot_metric_by_horizon
+from omnicast.result import BacktestResult
 
 
 def test_plot_metric_by_horizon(tmp_path):

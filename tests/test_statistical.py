@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from autotimeseries import ARIMAForecaster, AutoARIMAForecaster, ETSForecaster
+from omnicast import ARIMAForecaster, AutoARIMAForecaster, ETSForecaster
 
 
 def series():

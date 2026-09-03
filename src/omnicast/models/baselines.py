@@ -14,7 +14,7 @@ class NaiveForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import NaiveForecaster
+    >>> from omnicast import NaiveForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = NaiveForecaster().fit(y)
     >>> model.predict(horizon=2).mean.round(2).tolist()
@@ -59,7 +59,7 @@ class MeanForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import MeanForecaster
+    >>> from omnicast import MeanForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = MeanForecaster().fit(y)
     >>> model.predict(horizon=2).mean.round(2).tolist()
@@ -104,7 +104,7 @@ class DriftForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import DriftForecaster
+    >>> from omnicast import DriftForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = DriftForecaster().fit(y)
     >>> model.predict(horizon=2).mean.round(2).tolist()
@@ -153,7 +153,7 @@ class SeasonalNaiveForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import SeasonalNaiveForecaster
+    >>> from omnicast import SeasonalNaiveForecaster
     >>> y = pd.Series([10.0, 20.0, 15.0, 25.0, 11.0, 21.0, 16.0, 26.0])
     >>> model = SeasonalNaiveForecaster(seasonal_period=4).fit(y)
     >>> model.predict(horizon=4).mean.round(2).tolist()

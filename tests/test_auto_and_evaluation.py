@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from autotimeseries import (
+from omnicast import (
     AutoForecaster,
     DriftForecaster,
     MeanForecaster,

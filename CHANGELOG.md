@@ -1,12 +1,14 @@
 # Changelog
 
-## 0.2.0 - 2026-09-03
+## 0.1.0 - 2026-09-03
+
+**Renamed from `auto-time-series` to `omnicast`.** Same codebase, same repo (GitHub auto-redirects the old URL), new identity: this project's goal is to be a definitive, unified wrapper over classical and deep-learning forecasting methods -- one consistent, interval-aware `fit`/`predict` API, with backtesting and plotting as first-class citizens rather than an afterthought. Since `omnicast` is a new, unpublished PyPI project, versioning restarts at `0.1.0` rather than continuing `auto-time-series`'s `0.2.0`. Everything from that release carries over unchanged; see [Prior history](#prior-history-as-auto-time-series) below for what shipped before the rename.
 
 ### Added
 
-- Plotting (`autotimeseries.plotting`, matplotlib + seaborn, now base dependencies): `ForecastResult.plot()`, `BacktestResult.plot()`, `AutoForecaster.plot_all()`, plus the standalone `plot_backtest()` and `plot_metric_by_horizon()`. `backtest()` is now a thin wrapper over a new public `Backtester` class.
+- Plotting (`omnicast.plotting`, matplotlib + seaborn, now base dependencies): `ForecastResult.plot()`, `BacktestResult.plot()`, `AutoForecaster.plot_all()`, plus the standalone `plot_backtest()` and `plot_metric_by_horizon()`. `backtest()` is now a thin wrapper over a new public `Backtester` class.
 - Sphinx documentation site (`docs/`): installation, quickstart, evaluation guide, a worked example for every model ([`docs/examples/`](docs/examples/index.md)), and full autodoc API reference ([`docs/api/`](docs/api/index.md)). Built in CI.
-- A numpydoc `Examples` section (verified as a real doctest, not hand-typed) and a "when to use this model" comparison table (best for / avoid when / trend / seasonality / extra dependencies / min. observations) on every forecaster's class docstring: `NaiveForecaster`, `MeanForecaster`, `DriftForecaster`, `SeasonalNaiveForecaster`, `ThetaForecaster`, `ETSForecaster`, `ARIMAForecaster`, `AutoARIMAForecaster`, and `LSTMForecaster` (rendered in [`docs/api/models.md`](docs/api/models.md)), plus `AutoForecaster` (rendered in [`docs/api/auto.md`](docs/api/auto.md)). `pytest --doctest-modules src/autotimeseries` runs in CI so these can't silently drift from the code.
+- A numpydoc `Examples` section (verified as a real doctest, not hand-typed) and a "when to use this model" comparison table (best for / avoid when / trend / seasonality / extra dependencies / min. observations) on every forecaster's class docstring: `NaiveForecaster`, `MeanForecaster`, `DriftForecaster`, `SeasonalNaiveForecaster`, `ThetaForecaster`, `ETSForecaster`, `ARIMAForecaster`, `AutoARIMAForecaster`, and `LSTMForecaster` (rendered in [`docs/api/models.md`](docs/api/models.md)), plus `AutoForecaster` (rendered in [`docs/api/auto.md`](docs/api/auto.md)). `pytest --doctest-modules src/omnicast` runs in CI so these can't silently drift from the code.
 - An end-to-end real-data walkthrough, [`examples/epidatpy_forecasting_and_plotting.ipynb`](examples/epidatpy_forecasting_and_plotting.ipynb) (see [Datasets used in examples](#datasets-used-in-examples) below).
 
 ### Fixed
@@ -29,7 +31,18 @@ The one **real** dataset in the repo is in [`examples/epidatpy_forecasting_and_p
 
 No documentation host (GitHub Pages / Read the Docs) is configured yet, so the links above point at the in-repo doc sources rather than a live site; `uv run sphinx-build -b html docs docs/_build/html` builds them locally.
 
-## 0.1.0
+## Prior history (as `auto-time-series`)
+
+Released under the project's original name, before the rename above. Code references below (`autotimeseries`, `src/autotimeseries`) reflect what the package was actually called at the time.
+
+### 0.2.0
+
+- Plotting (`autotimeseries.plotting`, matplotlib + seaborn, now base dependencies): `ForecastResult.plot()`, `BacktestResult.plot()`, `AutoForecaster.plot_all()`, plus the standalone `plot_backtest()` and `plot_metric_by_horizon()`. `backtest()` became a thin wrapper over a new public `Backtester` class.
+- Sphinx documentation site (`docs/`): installation, quickstart, evaluation guide, a worked example for every model, and full autodoc API reference. Built in CI.
+- A numpydoc `Examples` section and a "when to use this model" comparison table on every forecaster's class docstring.
+- Fixed the `docs` CI job (Napoleon numpy-docstring config, missing `docs/_static`) and documented the `Backtester` class in the API reference.
+
+### 0.1.0
 
 - Common fit/predict API and labelled forecast result objects.
 - Naive, seasonal-naive, mean, drift, Theta, ETS, ARIMA, automatic ARIMA, and LSTM models.
@@ -39,4 +52,3 @@ No documentation host (GitHub Pages / Read the Docs) is configured yet, so the l
 - Rolling-origin evaluation, accuracy metrics, and automatic model selection.
 - Fixed `AutoForecaster.fit` mutating a caller-supplied `models` list on each call.
 - CI workflow running ruff and pytest across Python 3.10-3.12.
-

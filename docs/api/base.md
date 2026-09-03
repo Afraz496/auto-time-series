@@ -1,7 +1,7 @@
 # Base estimator
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.BaseForecaster
+.. autoclass:: omnicast.BaseForecaster
    :members:
    :undoc-members:
    :show-inheritance:

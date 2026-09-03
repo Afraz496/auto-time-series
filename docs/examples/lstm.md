@@ -1,7 +1,7 @@
 # LSTMForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.LSTMForecaster
+.. autoclass:: omnicast.LSTMForecaster
    :no-index:
 ```
 
@@ -10,14 +10,14 @@ The package's first neural model: wraps `torch.nn.LSTM`, following the same
 optional `torch` extra:
 
 ```bash
-pip install auto-time-series[torch]
+pip install omnicast[torch]
 ```
 
 If `torch` isn't installed, the module still imports cleanly, and only
 `fit()` raises a clear `ImportError` naming the missing package.
 
 ```python
-from autotimeseries import LSTMForecaster
+from omnicast import LSTMForecaster
 
 model = LSTMForecaster(
     lookback=12,      # window of past points used to predict the next one

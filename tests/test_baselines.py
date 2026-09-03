@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from autotimeseries import DriftForecaster, MeanForecaster, NaiveForecaster, SeasonalNaiveForecaster
+from omnicast import DriftForecaster, MeanForecaster, NaiveForecaster, SeasonalNaiveForecaster
 
 
 @pytest.mark.parametrize(

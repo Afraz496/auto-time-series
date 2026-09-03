@@ -1,7 +1,7 @@
 # API reference
 
-Every public name below is importable directly from `autotimeseries`
-(for example `from autotimeseries import ThetaForecaster`), regardless of
+Every public name below is importable directly from `omnicast`
+(for example `from omnicast import ThetaForecaster`), regardless of
 which internal module defines it.
 
 ```{toctree}

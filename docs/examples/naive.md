@@ -1,7 +1,7 @@
 # NaiveForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.NaiveForecaster
+.. autoclass:: omnicast.NaiveForecaster
    :no-index:
 ```
 
@@ -12,7 +12,7 @@ fancier model can't out-backtest `NaiveForecaster`, it isn't earning its
 complexity.
 
 ```python
-from autotimeseries import NaiveForecaster
+from omnicast import NaiveForecaster
 
 # y is the sample series defined on the model guide's index page
 model = NaiveForecaster().fit(y)

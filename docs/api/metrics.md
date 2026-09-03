@@ -1,8 +1,8 @@
 # Metrics
 
 ```{eval-rst}
-.. autofunction:: autotimeseries.mae
-.. autofunction:: autotimeseries.rmse
-.. autofunction:: autotimeseries.mape
-.. autofunction:: autotimeseries.smape
+.. autofunction:: omnicast.mae
+.. autofunction:: omnicast.rmse
+.. autofunction:: omnicast.mape
+.. autofunction:: omnicast.smape
 ```

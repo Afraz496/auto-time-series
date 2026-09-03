@@ -1,7 +1,7 @@
 # ThetaForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.ThetaForecaster
+.. autoclass:: omnicast.ThetaForecaster
    :no-index:
 ```
 
@@ -15,7 +15,7 @@ reaching for a full state-space model.
 ## Non-seasonal
 
 ```python
-from autotimeseries import ThetaForecaster
+from omnicast import ThetaForecaster
 
 model = ThetaForecaster().fit(y)          # seasonal_period=None
 forecast = model.predict(horizon=6)

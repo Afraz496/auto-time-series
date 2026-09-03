@@ -1,7 +1,7 @@
 # ARIMAForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.ARIMAForecaster
+.. autoclass:: omnicast.ARIMAForecaster
    :no-index:
 ```
 
@@ -10,7 +10,7 @@ when you already know (or want to fix) the ARIMA order -- for a searched
 order, see {doc}`auto_arima`.
 
 ```python
-from autotimeseries import ARIMAForecaster
+from omnicast import ARIMAForecaster
 
 model = ARIMAForecaster(order=(2, 1, 1)).fit(y)
 forecast = model.predict(horizon=6, level=[80, 95])

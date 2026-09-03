@@ -1,18 +1,18 @@
 # MeanForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.MeanForecaster
+.. autoclass:: omnicast.MeanForecaster
    :no-index:
 ```
 
 Forecasts the historical mean for every horizon step -- flat, low-variance,
 and blind to trend or seasonality. Useful as a stability baseline (does the
 series even have a signal worth modeling?) and, via
-{class}`~autotimeseries.AutoForecaster`'s leaderboard, as a sanity check that
+{class}`~omnicast.AutoForecaster`'s leaderboard, as a sanity check that
 should almost always lose to anything trend-aware.
 
 ```python
-from autotimeseries import MeanForecaster
+from omnicast import MeanForecaster
 
 model = MeanForecaster().fit(y)
 forecast = model.predict(horizon=6, level=[80, 95])

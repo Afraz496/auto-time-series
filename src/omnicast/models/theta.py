@@ -43,7 +43,7 @@ class ThetaForecaster(BaseForecaster):
     Examples
     --------
     >>> import pandas as pd
-    >>> from autotimeseries import ThetaForecaster
+    >>> from omnicast import ThetaForecaster
     >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
     >>> model = ThetaForecaster().fit(y)
     >>> model.predict(horizon=2).mean.round(2).tolist()

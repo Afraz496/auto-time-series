@@ -1,7 +1,7 @@
 # DriftForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.DriftForecaster
+.. autoclass:: omnicast.DriftForecaster
    :no-index:
 ```
 
@@ -10,7 +10,7 @@ and last observation. Cheap, closed-form, and a much stronger baseline than
 `NaiveForecaster` on a trending series with no seasonality.
 
 ```python
-from autotimeseries import DriftForecaster
+from omnicast import DriftForecaster
 
 model = DriftForecaster().fit(y)
 forecast = model.predict(horizon=6, level=[80, 95])

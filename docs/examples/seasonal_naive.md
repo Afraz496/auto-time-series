@@ -1,7 +1,7 @@
 # SeasonalNaiveForecaster
 
 ```{eval-rst}
-.. autoclass:: autotimeseries.SeasonalNaiveForecaster
+.. autoclass:: omnicast.SeasonalNaiveForecaster
    :no-index:
 ```
 
@@ -11,7 +11,7 @@ real seasonal structure -- `NaiveForecaster` will systematically miss the
 seasonal swing that this model captures for free.
 
 ```python
-from autotimeseries import SeasonalNaiveForecaster
+from omnicast import SeasonalNaiveForecaster
 
 model = SeasonalNaiveForecaster(seasonal_period=12).fit(y)
 forecast = model.predict(horizon=6, level=[80, 95])
