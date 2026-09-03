@@ -13,7 +13,43 @@ from ..base import BaseForecaster
 
 
 class ETSForecaster(BaseForecaster):
-    """Error-trend-seasonal state-space model with automatic component defaults."""
+    """Error-trend-seasonal state-space model with automatic component defaults.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from autotimeseries import ETSForecaster
+    >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
+    >>> model = ETSForecaster(trend="add").fit(y)
+    >>> model.predict(horizon=2).mean.round(2).tolist()
+    [15.6, 16.49]
+
+    Pass ``seasonal="add"`` (or ``"mul"``) with ``seasonal_period`` set to
+    model a repeating cycle alongside the trend.
+
+    Notes
+    -----
+    .. list-table:: When to use this model
+       :header-rows: 1
+       :widths: 25 75
+
+       * - Best for
+         - Series with a known trend/seasonal shape where you want a full
+           statistical fit (AIC/BIC, parameter confidence intervals) rather
+           than an approximation
+       * - Avoid when
+         - You want the trend/seasonal order searched for you (see
+           :class:`AutoARIMAForecaster`) or need exogenous regressors
+       * - Handles trend
+         - Yes, via ``trend`` (``"add"``, ``"mul"``, or ``None``)
+       * - Handles seasonality
+         - Yes, via ``seasonal`` + ``seasonal_period``
+       * - Extra dependencies
+         - None (uses ``statsmodels``)
+       * - Min. observations
+         - Enough for ``statsmodels`` to estimate the requested
+           components; at least ``2 * seasonal_period`` when seasonal
+    """
 
     def __init__(
         self,
@@ -55,7 +91,44 @@ class ETSForecaster(BaseForecaster):
 
 
 class ARIMAForecaster(BaseForecaster):
-    """ARIMA/SARIMA model with optional exogenous regressors."""
+    """ARIMA/SARIMA model with optional exogenous regressors.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from autotimeseries import ARIMAForecaster
+    >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
+    >>> model = ARIMAForecaster(order=(1, 0, 0)).fit(y)
+    >>> model.predict(horizon=2).mean.round(2).tolist()
+    [14.76, 15.55]
+
+    Pass ``seasonal_order=(P, D, Q, m)`` for SARIMA, and an ``X`` DataFrame
+    (with matching index at both ``fit`` and ``predict`` time) to include
+    exogenous regressors.
+
+    Notes
+    -----
+    .. list-table:: When to use this model
+       :header-rows: 1
+       :widths: 25 75
+
+       * - Best for
+         - You already know (or want to fix) the ARIMA/SARIMA order, or
+           need exogenous regressors -- the only model in this package
+           that supports them
+       * - Avoid when
+         - You want the order searched automatically (see
+           :class:`AutoARIMAForecaster`)
+       * - Handles trend
+         - Yes, via differencing (``d``) and/or ``trend``
+       * - Handles seasonality
+         - Yes, via ``seasonal_order``
+       * - Extra dependencies
+         - None (uses ``statsmodels``)
+       * - Min. observations
+         - Enough for ``SARIMAX`` to estimate the requested order;
+           roughly ``sum(order) + sum(seasonal_order[:3]) + 1`` at minimum
+    """
 
     def __init__(
         self,
@@ -109,7 +182,45 @@ class ARIMAForecaster(BaseForecaster):
 
 
 class AutoARIMAForecaster(ARIMAForecaster):
-    """Select a non-seasonal or seasonal ARIMA by corrected AIC grid search."""
+    """Select a non-seasonal or seasonal ARIMA by corrected AIC grid search.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from autotimeseries import AutoARIMAForecaster
+    >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
+    >>> model = AutoARIMAForecaster(max_p=1, max_d=1, max_q=0).fit(y)
+    >>> model.order_
+    (0, 1, 0)
+    >>> model.predict(horizon=2).mean.round(2).tolist()
+    [14.0, 14.0]
+
+    Pass ``seasonal_period`` to also search ``(P, D, Q, m)``.
+
+    Notes
+    -----
+    .. list-table:: When to use this model
+       :header-rows: 1
+       :widths: 25 75
+
+       * - Best for
+         - You want ARIMA/SARIMA without hand-picking an order; the
+           default first candidate :class:`~autotimeseries.AutoForecaster`
+           tries
+       * - Avoid when
+         - Interactive use with a wide search space -- cost scales as the
+           product of every ``max_*`` bound plus one, and it is often the
+           slowest model in the package to fit
+       * - Handles trend
+         - Yes, searched via ``max_d``
+       * - Handles seasonality
+         - Yes, searched via ``seasonal_period`` + ``max_P``/``max_D``/``max_Q``
+       * - Extra dependencies
+         - None (uses ``statsmodels``)
+       * - Min. observations
+         - Enough for the largest candidate order to be estimated;
+           failed candidates are skipped rather than aborting the search
+    """
 
     def __init__(
         self,

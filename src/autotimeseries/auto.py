@@ -25,6 +25,41 @@ class AutoForecaster(BaseForecaster):
 
     With ``keep_all=True`` every candidate is also fitted on the full series and
     kept in ``fitted_`` (name -> fitted model).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from autotimeseries import AutoForecaster
+    >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
+    >>> model = AutoForecaster().fit(y)
+    >>> model.leaderboard_["model"].iloc[0]
+    'ThetaForecaster'
+    >>> model.predict(horizon=2).mean.round(2).tolist()
+    [14.05, 14.49]
+
+    Notes
+    -----
+    .. list-table:: When to use this model
+       :header-rows: 1
+       :widths: 25 75
+
+       * - Best for
+         - The default entry point -- backtests a panel of candidates and
+           refits the winner, so you don't have to pick a model by hand
+       * - Avoid when
+         - You already know which model fits, need exogenous regressors
+           (not yet supported here), or want a single deterministic model
+           without a backtest step
+       * - Handles trend
+         - Depends on which candidate wins the backtest
+       * - Handles seasonality
+         - Yes, via ``seasonal_period`` (adds seasonal-aware candidates)
+       * - Extra dependencies
+         - None by default; include :class:`~autotimeseries.LSTMForecaster`
+           explicitly via ``models=[...]`` to pull in ``torch``
+       * - Min. observations
+         - Whatever the strictest candidate in ``models`` requires; a
+           failing candidate is skipped rather than aborting selection
     """
 
     def __init__(

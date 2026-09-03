@@ -64,6 +64,38 @@ class LSTMForecaster(BaseForecaster):
     Minimum sample size: `lookback + 2` observations. Training is not
     deterministic across torch versions/hardware even with a fixed `seed`;
     do not rely on exact reproducibility across environments.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from autotimeseries import LSTMForecaster
+    >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0, 16.0, 15.0])
+    >>> model = LSTMForecaster(lookback=2, hidden_size=4, epochs=30, seed=0).fit(y)
+    >>> forecast = model.predict(horizon=2)  # values vary slightly by platform
+
+    Notes
+    -----
+    .. list-table:: When to use this model
+       :header-rows: 1
+       :widths: 25 75
+
+       * - Best for
+         - Exploring a nonlinear, learned alternative once the built-in
+           statistical models have been tried; short series only
+       * - Avoid when
+         - You need a fast default, exact reproducibility across
+           machines, or don't want the optional ``torch`` dependency --
+           never included in :class:`~autotimeseries.AutoForecaster`'s
+           default candidates for these reasons
+       * - Handles trend
+         - Implicitly, via the sliding-window autoregression
+       * - Handles seasonality
+         - Only if ``lookback`` spans a full cycle; no explicit seasonal
+           component
+       * - Extra dependencies
+         - ``torch`` (``pip install auto-time-series[torch]``)
+       * - Min. observations
+         - ``lookback + 2``
     """
 
     def __init__(

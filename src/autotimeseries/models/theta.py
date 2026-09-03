@@ -39,6 +39,41 @@ class ThetaForecaster(BaseForecaster):
     `DatetimeIndex` with a regular frequency, `RangeIndex`, or numeric
     `Index`). Minimum sample size: 4 observations, or `2 * seasonal_period`
     when seasonal.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from autotimeseries import ThetaForecaster
+    >>> y = pd.Series([10.0, 12.0, 11.0, 13.0, 15.0, 14.0])
+    >>> model = ThetaForecaster().fit(y)
+    >>> model.predict(horizon=2).mean.round(2).tolist()
+    [14.05, 14.49]
+
+    Pass ``seasonal_period`` to deseasonalize first (multiplicative
+    decomposition) and reseasonalize the forecast afterward; this requires
+    strictly positive values and at least two full seasonal cycles, e.g.
+    ``ThetaForecaster(seasonal_period=12)`` on two years of monthly data.
+
+    Notes
+    -----
+    .. list-table:: When to use this model
+       :header-rows: 1
+       :widths: 25 75
+
+       * - Best for
+         - A strong, fast default before reaching for a full state-space
+           model; a good general-purpose replacement for the baselines
+       * - Avoid when
+         - You need exact parity with R's ``forecast::thetaf`` intervals,
+           or a model that supports exogenous regressors
+       * - Handles trend
+         - Yes (linear long-term trend line)
+       * - Handles seasonality
+         - Yes, via ``seasonal_period`` (multiplicative decomposition)
+       * - Extra dependencies
+         - None
+       * - Min. observations
+         - 4, or ``2 * seasonal_period`` when seasonal
     """
 
     def __init__(self, seasonal_period: int | None = None):
