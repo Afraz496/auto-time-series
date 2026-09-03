@@ -39,7 +39,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: uv sync --extra docs
+        run: uv sync --extra dev --extra docs
+
+      - name: Test docs build
+        run: uv run pytest tests/test_docs.py -v
 
       - name: Build docs
         run: uv run sphinx-build -b html docs docs/_build/html -W --keep-going
@@ -61,3 +64,6 @@ jobs:
 
       - name: Test
         run: uv run pytest --cov=autotimeseries --cov-report=term-missing
+
+      - name: Doctest model docstring examples
+        run: uv run pytest --doctest-modules src/autotimeseries

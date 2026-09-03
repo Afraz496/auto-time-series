@@ -41,7 +41,7 @@ autodoc_default_options = {
 }
 autosummary_generate = True
 napoleon_google_docstring = True
-napoleon_numpy_docstring = False
+napoleon_numpy_docstring = True
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
