@@ -7,7 +7,7 @@ from copy import deepcopy
 import pandas as pd
 
 from .base import BaseForecaster
-from .evaluation import backtest
+from .evaluation import Backtester
 from .models import (
     AutoARIMAForecaster,
     DriftForecaster,
@@ -21,7 +21,11 @@ from .utils import validate_series
 
 
 class AutoForecaster(BaseForecaster):
-    """Choose the model with the best rolling-origin validation score."""
+    """Choose the model with the best rolling-origin validation score.
+
+    With ``keep_all=True`` every candidate is also fitted on the full series and
+    kept in ``fitted_`` (name -> fitted model).
+    """
 
     def __init__(
         self,
@@ -29,11 +33,13 @@ class AutoForecaster(BaseForecaster):
         seasonal_period: int | None = None,
         metric: str = "rmse",
         validation_horizon: int = 1,
+        keep_all: bool = False,
     ):
         self.models = models
         self.seasonal_period = seasonal_period
         self.metric = metric
         self.validation_horizon = validation_horizon
+        self.keep_all = keep_all
 
     def fit(self, y, X=None):
         if X is not None:
@@ -53,16 +59,10 @@ class AutoForecaster(BaseForecaster):
             candidates.insert(1, SeasonalNaiveForecaster(self.seasonal_period))
         rows, successful = [], []
         initial = max(5, len(series) - max(3 * self.validation_horizon, len(series) // 4))
+        bt = Backtester(horizon=self.validation_horizon, initial=initial, metric=self.metric)
         for model in candidates:
             try:
-                scores = backtest(
-                    model,
-                    series,
-                    horizon=self.validation_horizon,
-                    initial=initial,
-                    metric=self.metric,
-                )
-                score = float(scores["score"].mean())
+                score = float(bt.run(model, series)["score"].mean())
                 rows.append({"model": type(model).__name__, "score": score, "status": "ok"})
                 successful.append((score, model))
             # Candidate libraries expose heterogeneous numerical failure types;
@@ -73,8 +73,17 @@ class AutoForecaster(BaseForecaster):
                 )
         if not successful:
             raise RuntimeError("All candidate models failed")
+        self.candidates_ = [model for _, model in successful]
         self.leaderboard_ = pd.DataFrame(rows).sort_values("score").reset_index(drop=True)
-        self.best_model_ = deepcopy(min(successful, key=lambda item: item[0])[1]).fit(series)
+        best = min(successful, key=lambda item: item[0])[1]
+        if self.keep_all:
+            self.fitted_ = {
+                type(m).__name__: deepcopy(m).fit(series) for m in self.candidates_
+            }
+            self.best_model_ = self.fitted_[type(best).__name__]
+        else:
+            self.fitted_ = None
+            self.best_model_ = deepcopy(best).fit(series)
         self.y_, self.is_fitted_, self.n_obs_ = series, True, len(series)
         self.fitted_values_ = self.best_model_.fitted_values_
         self.residuals_, self.sigma2_ = self.best_model_.residuals_, self.best_model_.sigma2_
@@ -87,6 +96,46 @@ class AutoForecaster(BaseForecaster):
         result = self.best_model_.predict(horizon, X=X, level=level)
         self.forecast_, self.prediction_intervals_ = result, self.best_model_.prediction_intervals_
         return result
+
+    def plot_all(
+        self, horizon=None, level=(80, 95), observed=None, intervals=False, **kwargs
+    ):
+        """Overlay every successful candidate's forecast on one axes.
+
+        Refits each candidate on the full training series, unless the estimator
+        was built with ``keep_all=True`` (then the stored fits are reused).
+
+        Parameters
+        ----------
+        horizon : int, optional
+            Steps to forecast. Defaults to ``validation_horizon``.
+        level : float or sequence of float, default (80, 95)
+            Prediction-interval coverage levels to compute.
+        observed : pd.Series, optional
+            History to draw. Defaults to the full training series.
+        intervals : bool, default False
+            Shade each candidate's prediction bands. Off by default -- with
+            several candidates the overlapping bands get muddy.
+        **kwargs
+            Forwarded to the trajectory plot (`title`, `ax`, `save_path`, ...).
+        """
+        from .plotting import plot_forecast_trajectories
+
+        self._check_fitted()
+        horizon = horizon or self.validation_horizon
+        if self.fitted_ is not None:
+            forecasts = {n: m.predict(horizon, level=level) for n, m in self.fitted_.items()}
+        else:
+            forecasts = {
+                type(m).__name__: deepcopy(m).fit(self.y_).predict(horizon, level=level)
+                for m in self.candidates_
+            }
+        return plot_forecast_trajectories(
+            forecasts,
+            observed=self.y_ if observed is None else observed,
+            intervals=intervals,
+            **kwargs,
+        )
 
     def _fit(self, y):
         pass
