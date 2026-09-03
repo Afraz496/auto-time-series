@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 - 2026-09-03
+
+### Added
+
+- The real-data notebook, [`examples/epidatpy_forecasting_and_plotting.ipynb`](examples/epidatpy_forecasting_and_plotting.ipynb), is now part of the Sphinx docs site (via `myst-nb`), linked from the [model guide](docs/examples/index.md) under "Real-data walkthrough". Its saved outputs (including plots) are rendered as-is rather than re-executed on every docs build, so the build doesn't depend on network access or the optional `epidatpy` package.
+
 ## 0.1.0 - 2026-09-03
 
 **Renamed from `auto-time-series` to `omnicast`.** Same codebase, same repo (GitHub auto-redirects the old URL), new identity: this project's goal is to be a definitive, unified wrapper over classical and deep-learning forecasting methods -- one consistent, interval-aware `fit`/`predict` API, with backtesting and plotting as first-class citizens rather than an afterthought. Since `omnicast` is a new, unpublished PyPI project, versioning restarts at `0.1.0` rather than continuing `auto-time-series`'s `0.2.0`. Everything from that release carries over unchanged; see [Prior history](#prior-history-as-auto-time-series) below for what shipped before the rename.

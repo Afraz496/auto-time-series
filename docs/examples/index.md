@@ -46,3 +46,20 @@ auto_arima
 lstm
 auto_forecaster
 ```
+
+## Real-data walkthrough
+
+Every page above uses the synthetic series generated above, chosen for compact,
+exactly reproducible output. For a longer, end-to-end walkthrough on a real
+dataset -- weekly % of inpatient insurance claims with a flu diagnosis in
+California, from the [CMU Delphi Epidata API](https://github.com/cmu-delphi/epidatpy)
+-- see the notebook below. It covers forecasting with uncertainty bands,
+rolling-origin backtesting, accuracy-by-horizon comparisons, and
+{class}`~omnicast.AutoForecaster`'s model selection and candidate overlay, all
+with plots.
+
+```{toctree}
+:maxdepth: 1
+
+epidatpy_forecasting_and_plotting
+```

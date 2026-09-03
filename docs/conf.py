@@ -22,11 +22,16 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosummary",
     "sphinx_autodoc_typehints",
-    "myst_parser",
+    "myst_nb",
 ]
 
 myst_enable_extensions = ["colon_fence", "deflist"]
-source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
+
+# The real-data notebook already carries its own saved outputs (plots included) from a
+# run against the live CMU Delphi Epidata API; re-executing it on every docs build would
+# make the build depend on network access and the optional `epidatpy` package for no
+# benefit, so myst-nb only renders what's already there.
+nb_execution_mode = "off"
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
