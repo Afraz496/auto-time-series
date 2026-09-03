@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 - 2026-09-03
+
+### Fixed
+
+- Attribution: `pyproject.toml`'s `authors` field (shown as the PyPI page's "Author") was the generic `"Omnicast contributors"`, naming neither project author. Now lists Afraz Arif Khan and Javier Martínez-Rodríguez explicitly. `LICENSE`'s copyright line was still the unfilled Apache template placeholder (`[yyyy] [name of copyright owner]`) -- filled in with both names. Added a Contributors section to `README.md` crediting Javier Martínez-Rodríguez specifically for the plotting and backtesting system he wrote (`ForecastResult`/`BacktestResult.plot()`, `Backtester`, `omnicast.plotting`, `AutoForecaster.plot_all()`, and the real-data notebook) -- previously his authorship was correct in git history but invisible everywhere else in the package.
+
 ## 0.1.2 - 2026-09-03
 
 ### Added

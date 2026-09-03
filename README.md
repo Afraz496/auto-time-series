@@ -93,4 +93,9 @@ This codebase is a Python implementation foundation, not a blanket claim of pari
 
 `LSTMForecaster` is the first wrapper around a Python deep-learning module (`torch`, optional dependency), following the same `BaseForecaster` interface as the statsmodels-backed models. It is not part of `AutoForecaster`'s default candidate list -- pass it explicitly via `AutoForecaster(models=[...])` -- since it is optional-dependency and materially slower to backtest.
 
+## Contributors
+
+- **Afraz Arif Khan** ([@Afraz496](https://github.com/Afraz496)) -- core estimator API, statistical models, evaluation, and the Sphinx docs site.
+- **Javier Martínez-Rodríguez** ([@JavierMtzRdz](https://github.com/JavierMtzRdz)) -- the plotting and backtesting system: `ForecastResult`/`BacktestResult` and their `.plot()` methods, the `Backtester` class, every function in `omnicast.plotting`, `AutoForecaster.plot_all()`, and the real-data forecasting walkthrough notebook.
+
 Licensed under Apache-2.0.

@@ -18,7 +18,7 @@ from .models import (
 from .plotting import plot_backtest, plot_metric_by_horizon
 from .result import BacktestResult, ForecastResult
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __all__ = [
     "ARIMAForecaster",
     "AutoARIMAForecaster",
