@@ -16,8 +16,9 @@ For local development:
 uv sync --extra dev
 ```
 
-Full docs with a worked example for every model live under [`docs/`](docs/index.md);
-build them locally with:
+Full docs with a worked example for every model, a real-data walkthrough, and the
+complete API reference are hosted at **[afraz496.github.io/omnicast](https://afraz496.github.io/omnicast/)**
+(source under [`docs/`](docs/index.md)). Build them locally with:
 
 ```bash
 uv sync --extra docs

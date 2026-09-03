@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 - 2026-09-03
+
+### Added
+
+- Docs are now hosted at [afraz496.github.io/omnicast](https://afraz496.github.io/omnicast/), deployed by a new `.github/workflows/pages.yml` on every push to `main`. Added as a `Documentation` link in `pyproject.toml`'s `project.urls`, so it shows up on the PyPI project page.
+
 ## 0.1.1 - 2026-09-03
 
 ### Added
